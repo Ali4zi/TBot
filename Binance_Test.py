@@ -3,7 +3,15 @@ from datetime import *
 import math
 from time import *
 import pandas as pd
+#pip install python-binance
+from binance.client import Client
+import time
+#Connect Binance
+API_Key= "1GqW8CehdaYaCsVhJPss1OcbUtBDKeJiGZY7UZFffKyIgYW450MwibONb99K3oY9"
+Secret_Key= "mhtqeGnKcw766Hbj2m1VpgV6TEg3PI0p91ZdhuKtcOnAo7XC7X4Y544v3Lc2zfnZ"
 
+client = Client(API_Key,Secret_Key,testnet= True)
+client.get_account()
 #Profit - Risk
 exp = 5 
 
@@ -127,11 +135,11 @@ def gv_cal(tp_rech):
     else:
         return (tp + exp) / tp_rech
 
-print(gv_cal(2))
-# print(gv_cal())
-#openPos()
-closePos()
-df.to_excel(r"C:\Users\AliRezaAzari\OneDrive - Provadis Hochschule\TBot\History.xlsx", index=False)
-print(df)
+# print(gv_cal(2))
+# # print(gv_cal())
+# #openPos()
+# closePos()
+# df.to_excel(r"C:\Users\AliRezaAzari\OneDrive - Provadis Hochschule\TBot\History.xlsx", index=False)
+# print(df)
 # trend_find()
 # print(trend)

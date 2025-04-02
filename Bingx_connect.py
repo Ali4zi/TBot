@@ -1,38 +1,27 @@
-import hmac
-import hashlib
-import requests
-import time
+# Connect to bingX
+from bingX import *
 
-# Replace with your actual API key and secret
-API_KEY = "3J1lRzlqSVbOphcF1B9YhWtbbQTYwTUJuVKVErreStAnSpl8RIOqZytwyMmSBMD6G03hSR3t3biG8QHRbAQ"
-API_SECRET = "BHmOrXrhDXKADMyY6L0b9drtuHxJ9KcTvj5HkA53h6IJwIR3jl9GAhXXd5HzkBFpgy5EXK8wHK8t23qLw"
-# Base URL for BingX API
-BASE_URL = 'https://api.bingx.com'
+my_api_key = "3J1lRzlqSVbOphcF1B9YhWtbbQTYwTUJuVKVErreStAnSpl8RIOqZytwyMmSBMD6G03hSR3t3biG8QHRbAQ"
+my_api_secret = "BHmOrXrhDXKADMyY6L0b9drtuHxJ9KcTvj5HkA53h6IJwIR3jl9GAhXXd5HzkBFpgy5EXK8wHK8t23qLw"
+bingx_client = BingX(api_key=my_api_key, secret_key=my_api_secret)
+try:
+    # Get the symbol and last price of BTC/USDT
+    response = bingx_client.perpetual_v2.market.get_ticker(symbol="BTC-USDT")
+    symbol = response["symbol"]
+    last_price = response["lastPrice"]
+    print(symbol, last_price)
 
-# Function to create a signature
-def create_signature(secret, message):
-    return hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()
+# Call the Trade API of Perpetual V2
+    # bingx_client.perpetual_v2.trade.create_order(Order(symbol="DOGE-USDT", side=Side.BUY, positionSide=PositionSide.LONG, quantity=100.0))
+    ac_det=bingx_client.standard.get_account_details()
+    print(ac_det)
+except (ClientError, ServerError) as e:
+    error_code = e.error_code
+    error_message = e.error_message
 
-# Function to get server time
-def get_server_time():
-    endpoint = '/api/v1/time'
-    response = requests.get(BASE_URL + endpoint)
-    return response.json()['serverTime']
-
-# Function to get account information
-def get_account_info():
-    endpoint = '/api/v1/account'
-    timestamp = str(get_server_time())
-    query_string = f'timestamp={timestamp}'
-    signature = create_signature(API_SECRET, query_string)
-    headers = {
-        'X-MBX-APIKEY': API_KEY
-    }
-    url = f'{BASE_URL}{endpoint}?{query_string}&signature={signature}'
-    response = requests.get(url, headers=headers)
-    return response.json()
-
-# Main program
-if __name__ == '__main__':
-    account_info = get_account_info()
-    print('Account Information:', account_info)
+    # try:
+#     response = bingx_client.perpetual_v2.trade.open_order(symbol="BTC-USDT", side="BUY", quantity=0.001, price=last_price)
+#     print(response)
+# except (ClientError, ServerError) as e:
+#     error_code = e.error_code
+#     error_message = e.error_message
